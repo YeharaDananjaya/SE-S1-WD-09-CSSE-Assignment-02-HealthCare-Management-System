@@ -14,10 +14,6 @@ const appointmentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  appointmentTime: {
-    type: String,
-    required: true,
-  },
   charge: {
     type: Number,
     required: true,
@@ -31,7 +27,7 @@ const appointmentSchema = new mongoose.Schema({
     required: true,
   },
   seatNo: {
-    type: String, // Assuming seat number is stored as a string
+    type: String,
     required: true,
   },
   userEmail: {

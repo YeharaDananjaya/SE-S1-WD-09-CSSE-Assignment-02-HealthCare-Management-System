@@ -124,14 +124,14 @@ const MedicalReportsDisplay = () => {
       {/* Modal for full report view */}
       {modalOpen && selectedReport && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
-          <div className="bg-white p-4 rounded-lg max-w-full sm:max-w-lg w-full relative shadow-2xl overflow-y-auto max-h-[98vh] lg:max-h-[85vh] lg:p-2">
+          <div className="bg-white  rounded-lg max-w-full sm:max-w-lg w-full relative shadow-2xl overflow-y-auto max-h-[80vh] lg:max-h-[80vh]">
             <button
-              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 z-10" // Updated class for positioning
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
               onClick={closeModal}
             >
               <FaTimes className="text-xl" />
             </button>
-            <h2 className="text-xl font-russoone text-center text-primary mb-4">
+            <h2 className="text-xl font-russoone text-center text-primary mb-0">
               Full Medical Report
             </h2>
 
@@ -190,8 +190,8 @@ const MedicalReportsDisplay = () => {
             </div>
 
             {/* Treatment & Prescription Section */}
-            <div className="bg-gray-100 p-3 rounded-lg shadow-md mb-3">
-              <h3 className="text-lg font-semibold mb-2 flex items-center">
+            <div className="bg-gray-100 p-3 rounded-lg shadow-md mb-1">
+              <h3 className="text-lg font-semibold mb-1 flex items-center">
                 <FaMedkit className="text-baseprimary mr-2" /> Treatment &
                 Prescription
               </h3>

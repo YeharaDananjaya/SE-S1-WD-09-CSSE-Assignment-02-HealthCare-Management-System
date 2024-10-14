@@ -24,25 +24,38 @@ router.get("/:email", async (req, res) => {
 // Create a new appointment (POST)
 router.post("/", async (req, res) => {
   const {
-    appointmentNo,
     doctorName,
     specialization,
-    appointmentTime,
     charge,
     date,
     scheduledTime,
+    seatNo,
     userEmail,
   } = req.body;
 
   try {
+    // Find the latest appointment number
+    const lastAppointment = await Appointment.findOne({})
+      .sort({ appointmentNo: -1 })
+      .exec();
+
+    // Generate a new appointment number
+    let newAppointmentNo = "MED00001"; // Default if no appointments exist
+    if (lastAppointment) {
+      // Extract number part from the last appointment number and increment it
+      const lastNumber = parseInt(lastAppointment.appointmentNo.slice(3), 10);
+      const nextNumber = lastNumber + 1;
+      newAppointmentNo = `MED${nextNumber.toString().padStart(5, "0")}`;
+    }
+
     const newAppointment = new Appointment({
-      appointmentNo,
+      appointmentNo: newAppointmentNo,
       doctorName,
       specialization,
-      appointmentTime,
       charge,
       date,
       scheduledTime,
+      seatNo,
       userEmail,
     });
 
@@ -69,8 +82,23 @@ router.post("/bulk", async (req, res) => {
   }
 
   try {
+    // Add appointment numbers for bulk insert
+    const lastAppointment = await Appointment.findOne({})
+      .sort({ appointmentNo: -1 })
+      .exec();
+
+    let lastNumber = lastAppointment
+      ? parseInt(lastAppointment.appointmentNo.slice(3), 10)
+      : 0;
+
+    const newAppointmentsData = appointmentsData.map((appointment) => {
+      lastNumber++;
+      const appointmentNo = `MED${lastNumber.toString().padStart(5, "0")}`;
+      return { ...appointment, appointmentNo };
+    });
+
     // Create multiple appointments
-    const newAppointments = await Appointment.insertMany(appointmentsData);
+    const newAppointments = await Appointment.insertMany(newAppointmentsData);
 
     res.status(201).json({
       message: "Appointments created successfully",

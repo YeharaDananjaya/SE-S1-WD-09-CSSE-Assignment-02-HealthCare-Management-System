@@ -5,6 +5,7 @@ import {
   Route,
   useLocation,
   Navigate,
+  matchPath,
 } from "react-router-dom";
 
 // Navbar and Footer components
@@ -25,6 +26,7 @@ import AddMedicalReportForm from "./pages/AddMedicalReportForm";
 import AddedReports from "./pages/AddedReports";
 import ReportDetails from "./pages/ReportDetails";
 import MedicalReportsDisplay from "./pages/medicalReportsDisplay";
+import Appointment from "./pages/Appointment";
 
 // Loading component
 import Loading from "./utils/loading";
@@ -43,6 +45,19 @@ const AppContent = () => {
     "/addedReports",
     "/report/:id",
   ];
+
+  // Paths where SideItemBar should not appear (including Appointment route)
+  const excludeSideItemBar = [
+    "/Appointment",
+    "/",
+    "/register",
+    "/addDoctor",
+    "/view-doctors",
+    "/add-report",
+    "/addedReports",
+    "/report/:id", // Exclude SideItemBar from Appointment page
+  ];
+
   // Paths where loading screen should not appear
   const noLoadingPaths = [
     "/addDoctor",
@@ -52,13 +67,13 @@ const AppContent = () => {
     "/report/:id",
   ];
 
+  // Check if the current path is in the list of paths where loading should not appear
+  const isNoLoadingPath = noLoadingPaths.some((path) =>
+    matchPath(path, location.pathname)
+  );
+
   useEffect(() => {
-    // Show loading screen only if the current path is not in the noLoadingPaths array
-    if (
-      !noLoadingPaths.some((path) =>
-        new RegExp(path.replace(":id", "\\d+")).test(location.pathname)
-      )
-    ) {
+    if (!isNoLoadingPath) {
       setIsLoading(true);
       const timer = setTimeout(() => {
         setIsLoading(false);
@@ -66,19 +81,9 @@ const AppContent = () => {
 
       return () => clearTimeout(timer);
     } else {
-      setIsLoading(false); // Ensure loading is false for the excluded paths
-    }
-  }, [location]);
-
-  useEffect(() => {
-    setIsLoading(true);
-
-    const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [location]);
+    }
+  }, [location, isNoLoadingPath]);
 
   return (
     <div className="relative flex-col min-h-screen overflow-hidden lgs:items-center">
@@ -95,23 +100,23 @@ const AppContent = () => {
             <Route path="/register" element={<Register />} />{" "}
             {/* Register route */}
             <Route path="/profile" element={<Profile />} />{" "}
-            <Route path="/payment" element={<DisplayAppointments />} />{" "}
-            <Route path="/payment-process" element={<PaymentProcess />} />{" "}
-            <Route path="/medical-report" element={<MedicalReportsDisplay />} />{" "}
             {/* Profile route */}
+            <Route path="/payment" element={<DisplayAppointments />} />
+            <Route path="/payment-process" element={<PaymentProcess />} />
+            <Route path="/medical-report" element={<MedicalReportsDisplay />} />
             <Route path="/addDoctor" element={<AddDoctor />} />
             <Route path="/view-doctors" element={<DoctorList />} />
             <Route path="/add-report" element={<AddMedicalReportForm />} />
             <Route path="/addedReports" element={<AddedReports />} />
             <Route path="/report/:id" element={<ReportDetails />} />
-            {/* Fallback route for undefined paths */}
+            <Route path="/Appointment" element={<Appointment />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         )}
       </div>
 
-      {/* SideItemBar Component */}
-      {!excludeNavbarFooter.includes(location.pathname) && (
+      {/* Conditionally render SideItemBar based on the current path and isLoading state */}
+      {!excludeSideItemBar.includes(location.pathname) && !isLoading && (
         <div className="hidden lgs:flex mds:flex items-center justify-center">
           <SideItemBar />
         </div>
