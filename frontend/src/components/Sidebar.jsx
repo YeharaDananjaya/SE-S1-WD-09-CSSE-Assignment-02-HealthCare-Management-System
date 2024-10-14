@@ -29,9 +29,13 @@ const Sidebar = () => {
   return (
     <>
       {/* Menu Icon (Visible on smaller screens) */}
-      <div className="sms:block md:hidden p-4 bg-blue-900 text-white fixed top-0 left-0 z-50">
-        <FiMenu size={30} onClick={toggleSidebar} className="cursor-pointer" />
-      </div>
+      <div className="p-4 fixed top-0 left-0 z-50"> {/* Removed background classes */}
+                <FiMenu
+                    size={30}
+                    onClick={toggleSidebar}
+                    className="cursor-pointer text-blue-900" // Custom color added to the icon
+                />
+            </div>
 
       {/* Sidebar */}
       <div
@@ -50,7 +54,7 @@ const Sidebar = () => {
 
         <div>
           <h2 className="text-3xl font-bold mb-6 tracking-wider text-center">
-            Healthcare <br /> Management
+           MEDILINK
           </h2>
           <ul className="space-y-4">
             <li>
@@ -103,7 +107,7 @@ const Sidebar = () => {
         </div>
 
         <div className="text-center text-sm text-gray-300 absolute bottom-0 left-0 w-full p-5">
-          © 2024 Healthcare Management
+          © 2024 MediLink
         </div>
       </div>
 
